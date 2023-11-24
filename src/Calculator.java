@@ -4,9 +4,9 @@ public class Calculator {
     public static void main(String[] args) throws Exception {
         Scanner input = new Scanner(System.in);
         System.out.println("Введите выражение:");
-        String expression = input.nextLine();           // Ввод выражения
+        String expression = input.nextLine();
         Main result = new Main();
-        String answer = result.calc(expression);        // Метод calc для объекта result
+        String answer = result.calc(expression);
         System.out.println("Вывод выражения:\n" + answer);
     }
     static class Main{
@@ -46,8 +46,6 @@ public class Calculator {
                     case "/" -> result = a / b;
                     default -> {
                         throw new Exception("Неверный знак оператора");
-
-//                        return exception;
                     }
                 }
                 if(isRoman){ // вводились ли римские числа, то конвертируем обратно
