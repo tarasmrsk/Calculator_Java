@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Calculator {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Scanner input = new Scanner(System.in);
         System.out.println("Введите выражение:");
         String expression = input.nextLine();           // Ввод выражения
@@ -10,50 +10,49 @@ public class Calculator {
         System.out.println("Вывод выражения:\n" + answer);
     }
     static class Main{
-        public static String calc(String input){ // в метод передается imput
-            String [] actions = {"+","-","*","/"}; // по этим знакам будем делить строку
-            String [] regexActions = {"\\+","-","\\*","/"};
+        public static String calc(String input) throws Exception { // в метод передается imput
+            String [] data = input.split(" ");
+            if(data.length == 1){
+                throw new Exception("Строка не является математической операцией");
+            }
+            if (data.length != 3) {
+                throw new Exception("Формат математической операции не удовлетворяет заданию - два операнда" +
+                        " и один оператор (+, -, /, *)");
+            }
+            if (data[1].equals("+") || data[1].equals("-") || data[1].equals("*") || data[1].equals("/")){
+            } else {
+                throw new Exception("Неверный знак оператора");
+            }
+
             int a, b;
             int result =0;
-            String exception = "throws Exception";
-            int actionIndex=-1;
 
-            for (int i = 0; i < actions.length; i++) {//проверка на знак
-                if(input.contains(actions[i])){// смотрим какой индекс у знака
-                    actionIndex = i;// присваиваем значение переменной
-                    break;
-                }
-            }
-            if(actionIndex==-1){
-                return exception;
-            }
-
-            String [] data = input.split(regexActions[actionIndex]); // делим строка по индексу знака на массив 2 чисел
-
-            if(Converter.isRoman(data[0])==Converter.isRoman(data[1])){ //проверка на одинаковые числа, не забыть кинуть искл
+            if(Converter.isRoman(data[0])==Converter.isRoman(data[2])){ //проверка на одинаковые числа, не забыть кинуть искл
                 boolean isRoman = Converter.isRoman(data[0]); // Проверяем есть ли числа в римском массиве
                 if(isRoman){
                     a = Converter.convertRomanToArab(data[0]);
-                    b = Converter.convertRomanToArab(data[1]);
+                    b = Converter.convertRomanToArab(data[2]);
                 } else { // если арабские, то переводим строку в число
                     a = Integer.parseInt(data[0]);
-                    b = Integer.parseInt(data[1]);
+                    b = Integer.parseInt(data[2]);
                 }
                 if ((a < 1) || (a > 10) || (b < 1) || (b > 10)){ // в римской системе выполняем проверку диапазона вводимых значений
-                    return exception;
+                    throw new Exception("ВВедите число от 1 до 10 включительно");
                 }
-                switch (actions[actionIndex]) { // по индексу знака выполняем действие
+                switch (data[1]) { // по индексу знака выполняем действие
                     case "+" -> result = a + b;// и присваиваем данное значение result
                     case "-" -> result = a - b;
                     case "*" -> result = a * b;
                     case "/" -> result = a / b;
                     default -> {
-                        return exception;
+                        throw new Exception("Неверный знак оператора");
+
+//                        return exception;
                     }
                 }
                 if(isRoman){ // вводились ли римские числа, то конвертируем обратно
                     if(result < 1){
-                        return exception;
+                        throw new Exception("В римской системе нет отрицательных чисел");
                     }else {
                         return String.valueOf(Converter.convertArabToRoman(result));
                     }
@@ -61,7 +60,7 @@ public class Calculator {
                     return String.valueOf(result);
                 }
             } else{
-                return exception; // исключение на разные числа
+                throw new Exception("Используются одновременно разные системы счисления");
             }
         }
     }
